@@ -17,9 +17,7 @@ export class AuthService {
   ) {}
   async signUp(createUserDto: AuthDto): Promise<any> {
     // Check if user exists
-    const userExists = await this.usersService.findByEmail(
-      createUserDto.email,
-    );
+    const userExists = await this.usersService.findByEmail(createUserDto.email);
     if (userExists) {
       throw new BadRequestException('User already exists');
     }
@@ -29,7 +27,7 @@ export class AuthService {
     const newUser = await this.usersService.create({
       ...createUserDto,
       password: hash,
-      name: ''
+      name: '',
     });
     const tokens = await this.getTokens(newUser.id, newUser.email);
     await this.updateRefreshToken(newUser.id, tokens.refreshToken);
@@ -54,8 +52,7 @@ export class AuthService {
 
   async refreshTokens(userId: number, refreshToken: string) {
     const user = await this.usersService.findById(userId);
-    if (!user || !user)
-      throw new ForbiddenException('Access Denied');
+    if (!user) throw new ForbiddenException('Access Denied');
     const refreshTokenMatches = await argon2.verify(
       user.refreshToken,
       refreshToken,
@@ -63,11 +60,9 @@ export class AuthService {
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
     const tokens = await this.getTokens(user.id, user.name);
 
-    
     await this.updateRefreshToken(user.id, tokens.refreshToken);
     return tokens;
   }
-
   hashData(data: string) {
     return argon2.hash(data);
   }
@@ -88,7 +83,7 @@ export class AuthService {
         },
         {
           secret: process.env.JWT_ACCESS_SECRET,
-          expiresIn: '15m',
+          expiresIn: '10m',
         },
       ),
       this.jwtService.signAsync(

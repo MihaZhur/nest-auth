@@ -19,12 +19,12 @@ export class RefreshTokenStrategy extends PassportStrategy(
   validate(req: Request, payload: any) {
     const authorizationHeader = req.get('Authorization');
     if (authorizationHeader) {
-    const refreshToken = authorizationHeader.replace('Bearer', '').trim();
-    return { ...payload, refreshToken };
+      const refreshToken = authorizationHeader.replace('Bearer', '').trim();
+      return { ...payload, refreshToken };
     } else {
-    // Handle the case where the 'Authorization' header is not present
-    // For example, you could throw an error or return a default value
-    throw new Error('Authorization header is missing');
+      // Handle the case where the 'Authorization' header is not present
+      // For example, you could throw an error or return a default value
+      throw new Error('Authorization header is missing');
     }
   }
 }

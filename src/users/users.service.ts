@@ -16,9 +16,9 @@ export class UsersService {
     return createdUser;
   }
 
-  // async findAll(): Promise<UserDocument[]> {
-  //   return this.userModel.find().exec();
-  // }
+  async findAll(): Promise<any> {
+    return this.prismaService.user.findMany();
+  }
 
   async findByEmail(email: string): Promise<User> {
     return this.prismaService.user.findUnique({ where: { email } });
@@ -28,14 +28,13 @@ export class UsersService {
     return this.prismaService.user.findUnique({ where: { id: userId } });
   }
 
-  async update(
-    id: number,
-    updateUserDto: UpdateUserDto,
-  ): Promise<User> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     console.log(updateUserDto);
-    
-    return this.prismaService.user
-      .update({ where: { id }, data: updateUserDto })
+
+    return this.prismaService.user.update({
+      where: { id },
+      data: updateUserDto,
+    });
   }
 
   // async remove(id: string): Promise<UserDocument> {
